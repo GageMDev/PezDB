@@ -9,7 +9,9 @@ function InputForm() {
     const [image, setImage] = useState<Blob | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
+
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
         const startVideo = async () => {
@@ -30,12 +32,11 @@ function InputForm() {
     };
 
     const handleImageCapture = async () => {
-        if (videoRef.current) {
-            const canvas = document.createElement('canvas');
-            canvas.width = videoRef.current.videoWidth;
-            canvas.height = videoRef.current.videoHeight;
-            canvas.getContext('2d')?.drawImage(videoRef.current, 0, 0);
-            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve));
+        if (videoRef.current && canvasRef.current) {
+            canvasRef.current.width = videoRef.current.videoWidth;
+            canvasRef.current.height = videoRef.current.videoHeight;
+            canvasRef.current.getContext('2d')?.drawImage(videoRef.current, 0, 0);
+            const blob = await new Promise<Blob | null>((resolve) => canvasRef.current?.toBlob(resolve));
             setImage(blob);
         }
     };
@@ -64,6 +65,7 @@ function InputForm() {
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 400}}>
             <form onSubmit={handleSubmit}>
                 <FormControl>
+                    <video ref={videoRef} autoPlay />
                     <TextField
                         label="Text Input"
                         value={textInput}
@@ -80,10 +82,10 @@ function InputForm() {
                         <option value="">Select an option</option>
                         {/* Add your dropdown options here */}
                     </Select>
-                    <video ref={videoRef} autoPlay />
                     <Button variant="contained" onClick={handleImageCapture}>
                         Take Picture
                     </Button>
+                    <canvas ref={canvasRef}></canvas>
                     <Button
                         type="submit"
                         variant="contained"
