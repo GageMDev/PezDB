@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  nextapp:
+    build: .  # Build from the current directory (where the Dockerfile is)
+    ports:
+      - "3000:3000"
+    volumes:
+      - photo-volume:/app/photos
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/your-database-name
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:4.4
+    volumes:
+      - mongo-volume:/data/db
+
+volumes:
+  photo-volume:
+  mongo-volume:
