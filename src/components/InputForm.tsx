@@ -1,14 +1,25 @@
-"use client"
-import React, {FormEventHandler, useState, useRef, useEffect} from 'react';
-import axios from 'axios';
-import {Box, Button, FormControl, Select, SelectChangeEvent, TextField, Typography,} from '@mui/material';
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import {
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 
 function InputForm() {
-    const [textInput, setTextInput] = useState('');
-    const [dropdownValue, setDropdownValue] = useState('');
+    const [textInput, setTextInput] = useState("");
+    const [dropdownValue, setDropdownValue] = useState("");
     const [image, setImage] = useState<Blob | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitMessage, setSubmitMessage] = useState('');
+    const [submitMessage, setSubmitMessage] = useState("");
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -16,14 +27,18 @@ function InputForm() {
     useEffect(() => {
         const startVideo = async () => {
             if (videoRef.current) {
-                videoRef.current.srcObject = await navigator.mediaDevices.getUserMedia({video: true});
+                videoRef.current.srcObject = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                });
                 await videoRef.current.play();
             }
         };
         startVideo();
     }, []);
 
-    const handleTextInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTextInputChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
         setTextInput(event.target.value);
     };
 
@@ -35,8 +50,10 @@ function InputForm() {
         if (videoRef.current && canvasRef.current) {
             canvasRef.current.width = videoRef.current.videoWidth;
             canvasRef.current.height = videoRef.current.videoHeight;
-            canvasRef.current.getContext('2d')?.drawImage(videoRef.current, 0, 0);
-            const blob = await new Promise<Blob | null>((resolve) => canvasRef.current?.toBlob(resolve));
+            canvasRef.current.getContext("2d")?.drawImage(videoRef.current, 0, 0);
+            const blob = await new Promise<Blob | null>(
+                (resolve) => canvasRef.current?.toBlob(resolve),
+            );
             setImage(blob);
         }
     };
@@ -45,59 +62,69 @@ function InputForm() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('text', textInput);
-        formData.append('dropdown', dropdownValue);
+        formData.append("text", textInput);
+        formData.append("dropdown", dropdownValue);
         if (image) {
-            formData.append('image', image);
+            formData.append("image", image);
         }
 
         try {
-            const response = await axios.post('/api/submit', formData);
-            console.log('Form submitted successfully:', response.data);
+            const response = await axios.post("/api/submit", formData);
+            console.log("Form submitted successfully:", response.data);
             // Handle successful submission (e.g., clear form fields, display success message)
         } catch (error) {
-            console.error('Error submitting form:', error);
+            console.error("Error submitting form:", error);
             // Handle submission error (e.g., display error message)
         }
     };
 
     return (
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 400}}>
-            <form onSubmit={handleSubmit}>
-                <FormControl>
+        <Box>
+            <Stack direction="row" spacing={3}>
+                <Stack>
                     <video ref={videoRef} autoPlay />
+                    <canvas ref={canvasRef}></canvas>
+                    <Button variant="contained" onClick={handleImageCapture}>
+                        Take Picture
+                    </Button>
+                </Stack>
+                <form onSubmit={handleSubmit}>
                     <TextField
-                        label="Text Input"
+                        label="Name"
                         value={textInput}
                         onChange={handleTextInputChange}
                         margin="normal"
                         fullWidth
                     />
-                    <Select
-                        label="Dropdown"
-                        value={dropdownValue}
-                        onChange={handleDropdownChange}
-                        fullWidth
-                    >
-                        <option value="">Select an option</option>
-                        {/* Add your dropdown options here */}
-                    </Select>
-                    <Button variant="contained" onClick={handleImageCapture}>
-                        Take Picture
-                    </Button>
-                    <canvas ref={canvasRef}></canvas>
+                    <FormControl fullWidth>
+                        <InputLabel id="stem-color-select-label">Stem Color</InputLabel>
+                        <Select
+                            labelId="stem-color-select-label"
+                            label="Stem Color"
+                            value={dropdownValue}
+                            onChange={handleDropdownChange}
+                            sx={{ minWidth: 120 }}
+                        >
+                            <MenuItem value="Black">Black</MenuItem>
+                            <MenuItem value="Blue">Blue</MenuItem>
+                            <MenuItem value="Green">Green</MenuItem>
+                            <MenuItem value="Pink">Pink</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button
                         type="submit"
                         variant="contained"
                         disabled={isSubmitting}
-                        sx={{mt: 2}}
+                        sx={{ mt: 2 }}
+                        fullWidth
                     >
                         Submit
                     </Button>
-                </FormControl>
-
-            </form>
-            {submitMessage && <Typography variant="body1">{submitMessage}</Typography>}
+                </form>
+            </Stack>
+            {submitMessage && (
+                <Typography variant="body1">{submitMessage}</Typography>
+            )}
         </Box>
     );
 }
