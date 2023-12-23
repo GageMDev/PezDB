@@ -18,9 +18,10 @@ import {
 const COLORS = ["Green", "Blue"]
 
 function InputForm() {
-    const [textInput, setTextInput] = useState("");
-    const [stemColor, setStemColor] = useState<string | undefined>("");
+    const [dispenserName, setDispenserName] = useState("");
+    const [stemColor, setStemColor] = useState<string>("");
     const [image, setImage] = useState<Blob | null>(null);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
 
@@ -39,12 +40,6 @@ function InputForm() {
         startVideo();
     }, []);
 
-    const handleTextInputChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        setTextInput(event.target.value);
-    };
-
 
     const handleImageCapture = async () => {
         if (videoRef.current && canvasRef.current) {
@@ -62,23 +57,27 @@ function InputForm() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("text", textInput);
-        if (stemColor) {
-            formData.append("stemColor", stemColor);
-        }
+        formData.append("name", dispenserName);
+        formData.append("stemColor", stemColor);
+
         if (image) {
             formData.append("image", image);
         }
 
         try {
+            setIsSubmitting(true)
             const response = await axios.post("/api/submit", formData);
-            console.log("Form submitted successfully:", response.data);
-            // Handle successful submission (e.g., clear form fields, display success message)
+            setIsSubmitting(false)
+            setSubmitMessage(`${dispenserName} submitted successfully`)
         } catch (error) {
             console.error("Error submitting form:", error);
             // Handle submission error (e.g., display error message)
         }
     };
+
+    const handleUndo = () => {
+        console.log("deleting object...")
+    }
 
     return (
         <Box>
@@ -93,8 +92,10 @@ function InputForm() {
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Name"
-                        value={textInput}
-                        onChange={handleTextInputChange}
+                        value={dispenserName}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            setDispenserName(event.target.value);
+                        }}
                         margin="normal"
                         fullWidth
                     />
@@ -103,7 +104,7 @@ function InputForm() {
                         id="combo-box-demo"
                         options={COLORS}
                         inputValue={stemColor}
-                        onInputChange={(_event: any, newValue: string | undefined) => {
+                        onInputChange={(_event: any, newValue: string) => {
                             setStemColor(newValue);
                         }}
                         sx={{ width: 300 }}
@@ -118,11 +119,16 @@ function InputForm() {
                     >
                         Submit
                     </Button>
+                    {submitMessage && (
+                        <Stack direction="row">
+                            <Typography variant="body1">{submitMessage}</Typography>
+                            <Button onClick={handleUndo}>Undo?</Button>
+                        </Stack>
+                    )}
                 </form>
+
             </Stack>
-            {submitMessage && (
-                <Typography variant="body1">{submitMessage}</Typography>
-            )}
+
         </Box>
     );
 }

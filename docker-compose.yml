@@ -6,14 +6,14 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - photo-volume:/app/photos
-    environment:
-      MONGODB_URI: mongodb://mongodb:27017/your-database-name
+      - photo-volume:/storage/photos
     depends_on:
       - mongodb
 
   mongodb:
     image: mongo:4.4
+    ports:
+      - "27017:27017"
     volumes:
       - mongo-volume:/data/db
 
