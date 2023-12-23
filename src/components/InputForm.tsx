@@ -24,6 +24,7 @@ function InputForm() {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
+    const [lastSubmittedID, setLastSubmittedID] = useState("");
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -66,18 +67,34 @@ function InputForm() {
 
         try {
             setIsSubmitting(true)
-            const response = await axios.post("/api/submit", formData);
+            const response = await axios.post("/api/dispensers", formData);
             setIsSubmitting(false)
             setSubmitMessage(`${dispenserName} submitted successfully`)
+            setLastSubmittedID(response.data.id)
         } catch (error) {
             console.error("Error submitting form:", error);
             // Handle submission error (e.g., display error message)
         }
     };
 
-    const handleUndo = () => {
-        console.log("deleting object...")
+    const handleUndo = async () => {
+        console.log("deleting object...");
+
+        const response = await fetch('/api/dispensers', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ _id: lastSubmittedID }),
+        });
+
+        if (!response.ok) {
+            console.error('Failed to delete object', await response.text());
+        } else {
+            console.log('Object deleted successfully');
+        }
     }
+
 
     return (
         <Box>
