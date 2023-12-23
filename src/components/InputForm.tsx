@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {
+    Autocomplete,
     Box,
     Button,
     FormControl,
@@ -14,9 +15,11 @@ import {
     Typography,
 } from "@mui/material";
 
+const COLORS = ["Green", "Blue"]
+
 function InputForm() {
     const [textInput, setTextInput] = useState("");
-    const [dropdownValue, setDropdownValue] = useState("");
+    const [stemColor, setStemColor] = useState<string | undefined>("");
     const [image, setImage] = useState<Blob | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
@@ -42,9 +45,6 @@ function InputForm() {
         setTextInput(event.target.value);
     };
 
-    const handleDropdownChange = (event: SelectChangeEvent) => {
-        setDropdownValue(event.target.value);
-    };
 
     const handleImageCapture = async () => {
         if (videoRef.current && canvasRef.current) {
@@ -63,7 +63,9 @@ function InputForm() {
 
         const formData = new FormData();
         formData.append("text", textInput);
-        formData.append("dropdown", dropdownValue);
+        if (stemColor) {
+            formData.append("stemColor", stemColor);
+        }
         if (image) {
             formData.append("image", image);
         }
@@ -96,21 +98,17 @@ function InputForm() {
                         margin="normal"
                         fullWidth
                     />
-                    <FormControl fullWidth>
-                        <InputLabel id="stem-color-select-label">Stem Color</InputLabel>
-                        <Select
-                            labelId="stem-color-select-label"
-                            label="Stem Color"
-                            value={dropdownValue}
-                            onChange={handleDropdownChange}
-                            sx={{ minWidth: 120 }}
-                        >
-                            <MenuItem value="Black">Black</MenuItem>
-                            <MenuItem value="Blue">Blue</MenuItem>
-                            <MenuItem value="Green">Green</MenuItem>
-                            <MenuItem value="Pink">Pink</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Autocomplete
+                        freeSolo
+                        id="combo-box-demo"
+                        options={COLORS}
+                        inputValue={stemColor}
+                        onInputChange={(_event: any, newValue: string | undefined) => {
+                            setStemColor(newValue);
+                        }}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Stem Color" />}
+                    />
                     <Button
                         type="submit"
                         variant="contained"
