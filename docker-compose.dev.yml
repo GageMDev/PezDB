@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: web
+    restart: always
+    volumes:
+      - photo-volume:/storage/photos
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - 3000:3000
+
+  mongodb:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-volume:/data/db
+
+volumes:
+  photo-volume:
+  mongo-volume:
