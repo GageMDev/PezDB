@@ -17,7 +17,7 @@ const AutocompleteWrapper: React.FC<AutocompleteWrapperProps> = ({ options, inpu
             inputValue={inputValue}
             onInputChange={(_, newValue) => onInputChange(newValue)}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} margin="normal" label={label} />}
+            renderInput={(params) => <TextField {...params} margin="dense" label={label} />}
         />
     );
 };

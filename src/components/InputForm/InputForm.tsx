@@ -25,11 +25,13 @@ const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683
 function InputForm() {
     const [dispenserName, setDispenserName] = useState("");
     const [collectionName, setCollectionName] = useState("");
+    const [copyright, setCopyright] = useState("");
     const [variation, setVariation] = useState("");
 
     const [stemColor, setStemColor] = useState<string>("");
     const [imc, setIMC] = useState<string>("");
     const [patent, setPatent] = useState<string>("");
+    const [country, setCountry] = useState<string>("");
 
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -71,9 +73,13 @@ function InputForm() {
         const formData = new FormData();
         formData.append("name", dispenserName);
         formData.append("collectionName", collectionName);
+        formData.append("copyRight", copyright);
         formData.append("variation", variation);
 
         formData.append("stemColor", stemColor);
+        formData.append("imc", imc);
+        formData.append("patent", patent);
+        formData.append("country", country);
 
         if (image) {
             formData.append("image", image);
@@ -139,6 +145,14 @@ function InputForm() {
                             }}
                         />
                         <AutocompleteWrapper
+                            label="Copyright"
+                            options={[]}
+                            inputValue={copyright}
+                            onInputChange={(newValue: string) => {
+                                setCopyright(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
                             label="Variation"
                             options={[]}
                             inputValue={variation}
@@ -170,6 +184,14 @@ function InputForm() {
                             inputValue={patent}
                             onInputChange={(newValue: string) => {
                                 setPatent(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Country"
+                            options={[]}
+                            inputValue={country}
+                            onInputChange={(newValue: string) => {
+                                setCountry(newValue);
                             }}
                         />
                     </InputGroup>
