@@ -1,5 +1,5 @@
 import styles from './page.module.css'
-import InputForm from "@/components/InputForm";
+import InputForm from "@/components/InputForm/InputForm";
 import DispenserTable from "@/components/DispenserTable";
 
 export default function Home() {

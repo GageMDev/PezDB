@@ -15,6 +15,7 @@ import {
     Typography,
 } from "@mui/material";
 import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper";
+import InputGroup from "@/components/InputForm/InputGroup";
 
 const COLORS = ["Green", "Blue"]
 const COLLECTION = ["Disney", "PEZ"]
@@ -23,6 +24,7 @@ function InputForm() {
     const [dispenserName, setDispenserName] = useState("");
     const [collectionName, setCollectionName] = useState("");
     const [stemColor, setStemColor] = useState<string>("");
+
     const [image, setImage] = useState<Blob | null>(null);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,6 +64,7 @@ function InputForm() {
 
         const formData = new FormData();
         formData.append("name", dispenserName);
+        formData.append("stemColor", stemColor);
         formData.append("stemColor", stemColor);
 
         if (image) {
@@ -110,8 +113,7 @@ function InputForm() {
                     </Button>
                 </Stack>
                 <form onSubmit={handleSubmit}>
-                    <Box sx={{border: 1, borderRadius: '16px', padding: 1, margin: 1}}>
-                        <Typography>Overall</Typography>
+                    <InputGroup label="Overall">
                         <AutocompleteWrapper
                             label="Name"
                             options={[]}
@@ -128,9 +130,8 @@ function InputForm() {
                                 setCollectionName(newValue);
                             }}
                         />
-                    </Box>
-                    <Box sx={{border: 1, borderRadius: '16px', padding: 1, margin: 1}}>
-                        <Typography>Stem</Typography>
+                    </InputGroup>
+                    <InputGroup label="Stem">
                         <AutocompleteWrapper
                             label="Color"
                             options={COLORS}
@@ -139,7 +140,7 @@ function InputForm() {
                                 setStemColor(newValue);
                             }}
                         />
-                    </Box>
+                    </InputGroup>
                     <Button
                         type="submit"
                         variant="contained"
