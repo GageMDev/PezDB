@@ -14,11 +14,14 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper";
 
 const COLORS = ["Green", "Blue"]
+const COLLECTION = ["Disney", "PEZ"]
 
 function InputForm() {
     const [dispenserName, setDispenserName] = useState("");
+    const [collectionName, setCollectionName] = useState("");
     const [stemColor, setStemColor] = useState<string>("");
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -107,26 +110,36 @@ function InputForm() {
                     </Button>
                 </Stack>
                 <form onSubmit={handleSubmit}>
-                    <TextField
-                        label="Name"
-                        value={dispenserName}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setDispenserName(event.target.value);
-                        }}
-                        margin="normal"
-                        fullWidth
-                    />
-                    <Autocomplete
-                        freeSolo
-                        id="combo-box-demo"
-                        options={COLORS}
-                        inputValue={stemColor}
-                        onInputChange={(_event: any, newValue: string) => {
-                            setStemColor(newValue);
-                        }}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="Stem Color" />}
-                    />
+                    <Box sx={{border: 1, borderRadius: '16px', padding: 1, margin: 1}}>
+                        <Typography>Overall</Typography>
+                        <AutocompleteWrapper
+                            label="Name"
+                            options={[]}
+                            inputValue={dispenserName}
+                            onInputChange={(newValue: string) => {
+                                setDispenserName(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Collection"
+                            options={COLLECTION}
+                            inputValue={collectionName}
+                            onInputChange={(newValue: string) => {
+                                setCollectionName(newValue);
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{border: 1, borderRadius: '16px', padding: 1, margin: 1}}>
+                        <Typography>Stem</Typography>
+                        <AutocompleteWrapper
+                            label="Color"
+                            options={COLORS}
+                            inputValue={stemColor}
+                            onInputChange={(newValue: string) => {
+                                setStemColor(newValue);
+                            }}
+                        />
+                    </Box>
                     <Button
                         type="submit"
                         variant="contained"
