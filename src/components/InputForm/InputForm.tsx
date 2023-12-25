@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper";
 import InputGroup from "@/components/InputForm/InputGroup";
+import QualitySelector from "@/components/InputForm/QualitySelector";
+import qualitySelector from "@/components/InputForm/QualitySelector";
 
 const COLORS = ["Green", "Blue"]
 const COLLECTIONS = ["Disney", "PEZ"]
@@ -27,6 +29,8 @@ function InputForm() {
     const [collectionName, setCollectionName] = useState("");
     const [copyright, setCopyright] = useState("");
     const [variation, setVariation] = useState("");
+    const [pezPackage, setPezPackage] = useState("");
+    const [quality, setQuality] = useState("Great");
 
     const [stemColor, setStemColor] = useState<string>("");
     const [imc, setIMC] = useState<string>("");
@@ -75,6 +79,8 @@ function InputForm() {
         formData.append("collectionName", collectionName);
         formData.append("copyRight", copyright);
         formData.append("variation", variation);
+        formData.append("package", pezPackage);
+        formData.append("quality", quality);
 
         formData.append("stemColor", stemColor);
         formData.append("imc", imc);
@@ -160,6 +166,7 @@ function InputForm() {
                                 setVariation(newValue);
                             }}
                         />
+                        <QualitySelector onPackageChange={setPezPackage} pezPackage={pezPackage} onQualityChange={setQuality} quality={quality}/>
                     </InputGroup>
                     <InputGroup label="Stem">
                         <AutocompleteWrapper
