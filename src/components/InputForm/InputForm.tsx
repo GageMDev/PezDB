@@ -18,12 +18,18 @@ import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper"
 import InputGroup from "@/components/InputForm/InputGroup";
 
 const COLORS = ["Green", "Blue"]
-const COLLECTION = ["Disney", "PEZ"]
+const COLLECTIONS = ["Disney", "PEZ"]
+const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
+const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
 
 function InputForm() {
     const [dispenserName, setDispenserName] = useState("");
     const [collectionName, setCollectionName] = useState("");
+    const [variation, setVariation] = useState("");
+
     const [stemColor, setStemColor] = useState<string>("");
+    const [imc, setIMC] = useState<string>("");
+    const [patent, setPatent] = useState<string>("");
 
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -64,7 +70,9 @@ function InputForm() {
 
         const formData = new FormData();
         formData.append("name", dispenserName);
-        formData.append("stemColor", stemColor);
+        formData.append("collectionName", collectionName);
+        formData.append("variation", variation);
+
         formData.append("stemColor", stemColor);
 
         if (image) {
@@ -124,10 +132,18 @@ function InputForm() {
                         />
                         <AutocompleteWrapper
                             label="Collection"
-                            options={COLLECTION}
+                            options={COLLECTIONS}
                             inputValue={collectionName}
                             onInputChange={(newValue: string) => {
                                 setCollectionName(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Variation"
+                            options={[]}
+                            inputValue={variation}
+                            onInputChange={(newValue: string) => {
+                                setVariation(newValue);
                             }}
                         />
                     </InputGroup>
@@ -138,6 +154,22 @@ function InputForm() {
                             inputValue={stemColor}
                             onInputChange={(newValue: string) => {
                                 setStemColor(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="IMC"
+                            options={IMCS}
+                            inputValue={imc}
+                            onInputChange={(newValue: string) => {
+                                setIMC(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Patent"
+                            options={PATENTS}
+                            inputValue={patent}
+                            onInputChange={(newValue: string) => {
+                                setPatent(newValue);
                             }}
                         />
                     </InputGroup>
