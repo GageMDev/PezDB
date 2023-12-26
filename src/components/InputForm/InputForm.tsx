@@ -26,11 +26,14 @@ const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683
 
 function InputForm() {
     const [dispenserName, setDispenserName] = useState("");
-    const [collectionName, setCollectionName] = useState("");
+    const [collection, setCollection] = useState("");
+    const [subCollection, setSubCollection] = useState("");
     const [copyright, setCopyright] = useState("");
     const [variation, setVariation] = useState("");
     const [pezPackage, setPezPackage] = useState("");
     const [quality, setQuality] = useState("Great");
+    const [yearReleased, setYearReleased] = useState("");
+    const [pezURL, setPezURL] = useState("");
 
     const [stemColor, setStemColor] = useState<string>("");
     const [imc, setIMC] = useState<string>("");
@@ -76,11 +79,14 @@ function InputForm() {
 
         const formData = new FormData();
         formData.append("name", dispenserName);
-        formData.append("collectionName", collectionName);
+        formData.append("collection", collection);
+        formData.append("subCollection", subCollection);
         formData.append("copyRight", copyright);
         formData.append("variation", variation);
         formData.append("package", pezPackage);
         formData.append("quality", quality);
+        formData.append("pezURL", pezURL);
+        formData.append("yearReleased", yearReleased);
 
         formData.append("stemColor", stemColor);
         formData.append("imc", imc);
@@ -145,9 +151,25 @@ function InputForm() {
                         <AutocompleteWrapper
                             label="Collection"
                             options={COLLECTIONS}
-                            inputValue={collectionName}
+                            inputValue={collection}
                             onInputChange={(newValue: string) => {
-                                setCollectionName(newValue);
+                                setCollection(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Sub-Collection"
+                            options={[]}
+                            inputValue={subCollection}
+                            onInputChange={(newValue: string) => {
+                                setSubCollection(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Variation"
+                            options={[]}
+                            inputValue={variation}
+                            onInputChange={(newValue: string) => {
+                                setVariation(newValue);
                             }}
                         />
                         <AutocompleteWrapper
@@ -159,11 +181,19 @@ function InputForm() {
                             }}
                         />
                         <AutocompleteWrapper
-                            label="Variation"
+                            label="Year Released"
                             options={[]}
-                            inputValue={variation}
+                            inputValue={yearReleased}
                             onInputChange={(newValue: string) => {
-                                setVariation(newValue);
+                                setYearReleased(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Pez URL"
+                            options={[]}
+                            inputValue={pezURL}
+                            onInputChange={(newValue: string) => {
+                                setPezURL(newValue);
                             }}
                         />
                         <QualitySelector onPackageChange={setPezPackage} pezPackage={pezPackage} onQualityChange={setQuality} quality={quality}/>
