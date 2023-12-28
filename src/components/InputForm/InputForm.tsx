@@ -36,32 +36,34 @@ const IMC_TO_COUNTRY: {[key: string]: string[]} = {
     "9": ["United States"],
     "V": ["Yugoslavia", "Slovenia"],
 }
+
+interface FormInputState {
+    name: string;
+    collection: string;
+    subCollection: string;
+    copyright: string;
+    variation: string;
+    pezPackage: string;
+    quality: string;
+    yearReleased: string;
+    pezURL: string;
+    stemColor: string;
+    imc: string;
+    patent: string;
+    country: string;
+    foot: string;
+    footText: string;
+    sleeveColor: string;
+    buttonColor: string;
+    sleeveText: string;
+}
+
+
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
 
 function InputForm() {
-    const [dispenserName, setDispenserName] = useState("");
-    const [collection, setCollection] = useState("");
-    const [subCollection, setSubCollection] = useState("");
-    const [copyright, setCopyright] = useState("");
-    const [variation, setVariation] = useState("");
-    const [pezPackage, setPezPackage] = useState("Loose");
-    const [quality, setQuality] = useState("Great");
-    const [yearReleased, setYearReleased] = useState("");
-    const [pezURL, setPezURL] = useState("");
-
-    const [stemColor, setStemColor] = useState<string>("");
-    const [imc, setIMC] = useState<string>("");
-    const [patent, setPatent] = useState<string>("");
-    const [country, setCountry] = useState<string>("");
-    const [foot, setFoot] = useState<string>("Feet");
-    const [footText, setFootText] = useState<string>("");
-
-    const [sleeveColor, setSleeveColor] = useState<string>("White");
-    const [buttonColor, setButtonColor] = useState<string>("White");
-    const [sleeveText, setSleeveText] = useState<string>("");
-
-    const [formInputState, setFormInputState] = useState({
-        dispenserName: "",
+    const [formInputState, setFormInputState] = useState<FormInputState>({
+        name: "",
         collection: "",
         subCollection: "",
         copyright: "",
@@ -70,17 +72,18 @@ function InputForm() {
         quality: "Great",
         yearReleased: "",
         pezURL: "",
+        // Stem
         stemColor: "",
         imc: "",
         patent: "",
         country: "",
         foot: "Feet",
         footText: "",
+        // Sleeve
         sleeveColor: "White",
         buttonColor: "White",
         sleeveText: ""
     });
-
 
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -120,26 +123,10 @@ function InputForm() {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append("name", dispenserName);
-        formData.append("collection", collection);
-        formData.append("subCollection", subCollection);
-        formData.append("copyRight", copyright);
-        formData.append("variation", variation);
-        formData.append("package", pezPackage);
-        formData.append("quality", quality);
-        formData.append("pezURL", pezURL);
-        formData.append("yearReleased", yearReleased);
-
-        formData.append("stemColor", stemColor);
-        formData.append("imc", imc);
-        formData.append("patent", patent);
-        formData.append("country", country);
-        formData.append("foot", foot);
-        formData.append("footText", footText);
-
-        formData.append("sleeveColor", sleeveColor);
-        formData.append("buttonColor", buttonColor);
-        formData.append("sleeveText", sleeveText);
+        Object.keys(formInputState).forEach((key) => {
+            const stateKey = key as keyof FormInputState;
+            formData.append(key, formInputState[stateKey]);
+        });
 
         if (image) {
             formData.append("image", image);
@@ -149,7 +136,7 @@ function InputForm() {
             setIsSubmitting(true)
             const response = await axios.post("/api/dispensers", formData);
             setIsSubmitting(false)
-            setSubmitMessage(`${dispenserName} submitted successfully`)
+            setSubmitMessage(`${formInputState.name} submitted successfully`)
             setLastSubmittedID(response.data.id)
         } catch (error) {
             console.error("Error submitting form:", error);
@@ -191,11 +178,11 @@ function InputForm() {
                         <AutocompleteWrapper
                             label="Name"
                             options={[]}
-                            inputValue={formInputState.dispenserName}
+                            inputValue={formInputState.name}
                             onInputChange={(newValue: string) => {
                                 setFormInputState(prevState => ({
                                     ...prevState,
-                                    dispenserName: newValue
+                                    name: newValue
                                 }));
                             }}
                         />
@@ -246,61 +233,97 @@ function InputForm() {
                         <AutocompleteWrapper
                             label="Year Released"
                             options={[]}
-                            inputValue={yearReleased}
+                            inputValue={formInputState.yearReleased}
                             onInputChange={(newValue: string) => {
-                                setYearReleased(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    yearReleased: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Pez URL"
                             options={[]}
-                            inputValue={pezURL}
+                            inputValue={formInputState.pezURL}
                             onInputChange={(newValue: string) => {
-                                setPezURL(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    pezURL: newValue
+                                }))
                             }}
                         />
-                        <QualitySelector onPackageChange={setPezPackage} pezPackage={pezPackage} onQualityChange={setQuality} quality={quality}/>
+                        <QualitySelector onPackageChange={(newValue: string) => {
+                            setFormInputState(prevState => ({
+                                ...prevState,
+                                pezPackage: newValue
+                            }))
+                        }} pezPackage={formInputState.pezPackage} onQualityChange={(newValue: string) => {
+                            setFormInputState(prevState => ({
+                                ...prevState,
+                                quality: newValue
+                            }))
+                        }} quality={formInputState.quality}/>
                     </InputGroup>
                     <InputGroup label="Stem">
                         <AutocompleteWrapper
                             label="Color"
                             options={COLORS}
-                            inputValue={stemColor}
+                            inputValue={formInputState.stemColor}
                             onInputChange={(newValue: string) => {
-                                setStemColor(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    stemColor: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="IMC"
                             options={IMCS}
-                            inputValue={imc}
+                            inputValue={formInputState.imc}
                             onInputChange={(newValue: string) => {
-                                setIMC(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    imc: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Patent"
                             options={PATENTS}
-                            inputValue={patent}
+                            inputValue={formInputState.patent}
                             onInputChange={(newValue: string) => {
-                                setPatent(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    patent: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Country"
-                            options={IMC_TO_COUNTRY[imc] || []}
-                            inputValue={country}
+                            options={IMC_TO_COUNTRY[formInputState.imc] || []}
+                            inputValue={formInputState.country}
                             onInputChange={(newValue: string) => {
-                                setCountry(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    country: newValue
+                                }))
                             }}
                         />
-                        <FootSelector foot={foot} onFootChange={setFoot}/>
+                        <FootSelector foot={formInputState.foot} onFootChange={(newValue: string) => {
+                            setFormInputState(prevState => ({
+                                ...prevState,
+                                foot: newValue
+                            }))
+                        }}/>
                         <AutocompleteWrapper
                             label="Foot Text"
                             options={[]}
-                            inputValue={footText}
+                            inputValue={formInputState.footText}
                             onInputChange={(newValue: string) => {
-                                setFootText(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    footText: newValue
+                                }))
                             }}
                             helpText="Use a space between to chars to indicate one on each foot. Use ? to indicate a missing one if needed."
                         />
@@ -309,25 +332,34 @@ function InputForm() {
                         <AutocompleteWrapper
                             label="Color"
                             options={["White"]}
-                            inputValue={sleeveColor}
+                            inputValue={formInputState.sleeveColor}
                             onInputChange={(newValue: string) => {
-                                setSleeveColor(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    sleeveColor: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Button Color"
                             options={BUTTON_COLORS}
-                            inputValue={buttonColor}
+                            inputValue={formInputState.buttonColor}
                             onInputChange={(newValue: string) => {
-                                setButtonColor(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    buttonColor: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Text"
                             options={[]}
-                            inputValue={sleeveText}
+                            inputValue={formInputState.sleeveText}
                             onInputChange={(newValue: string) => {
-                                setSleeveColor(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    sleeveText: newValue
+                                }))
                             }}
                         />
                     </InputGroup>
