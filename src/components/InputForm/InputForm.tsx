@@ -18,8 +18,6 @@ import { from } from 'nearest-color';
 
 const BUTTON_COLORS = ["Translucent", "Red"]
 const SLEEVE_COLORS = ["Translucent"]
-const COLLECTIONS = ["Licensed Characters", "PEZ"]
-const SUB_COLLECTIONS = ["Disney", "Dreamworks"]
 const SUB_SUB_COLLECTIONS = ["Disney", "Dreamworks"]
 const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
 const IMC_TO_COUNTRY: { [key: string]: string[] } = {
@@ -33,6 +31,10 @@ const IMC_TO_COUNTRY: { [key: string]: string[] } = {
     "8": ["Austria"],
     "9": ["United States"],
     "V": ["Yugoslavia", "Slovenia"],
+}
+
+const COLLECTION_SUBCOLLECTIONS: {[key: string]: string[]} = {
+    "Holiday": ["Christmas"],
 }
 
 interface FormInputState {
@@ -79,7 +81,7 @@ const STEM_COLOR_GUESSES = {
     Lavender: '#5f5a79',
     "Navy Blue": '#080e15',
     Blue: '#0c1f55',
-    "light Blue": '#008080',
+    "Light Blue": '#4990ac',
     Green: '#166936',
     "Lime Green": '#5fb940',
     "Forest Green": '#29501f',
@@ -253,7 +255,7 @@ function InputForm() {
                             />
                             <AutocompleteWrapper
                                 label="Collection"
-                                options={COLLECTIONS}
+                                options={Object.keys(COLLECTION_SUBCOLLECTIONS)}
                                 inputValue={formInputState.collection}
                                 onInputChange={(newValue: string) => {
                                     setFormInputState(prevState => ({
@@ -264,7 +266,7 @@ function InputForm() {
                             />
                             <AutocompleteWrapper
                                 label="Sub-Collection"
-                                options={SUB_COLLECTIONS}
+                                options={COLLECTION_SUBCOLLECTIONS[formInputState.collection] || []}
                                 inputValue={formInputState.subCollection}
                                 onInputChange={(newValue: string) => {
                                     setFormInputState(prevState => ({
