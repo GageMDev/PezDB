@@ -58,6 +58,8 @@ interface FormInputState {
     sleeveColor: string;
     buttonColor: string;
     sleeveText: string;
+    priceMin: string;
+    priceMax: string;
 }
 
 const STEM_COLOR_GUESSES = {
@@ -112,7 +114,10 @@ const DEFAULT_FORM_STATE: FormInputState = {
     // Sleeve
     sleeveColor: "Translucent",
     buttonColor: "Translucent",
-    sleeveText: ""
+    sleeveText: "",
+    // Pricing
+    priceMin: "",
+    priceMax: ""
 }
 
 function InputForm() {
@@ -451,6 +456,30 @@ function InputForm() {
                                         setFormInputState(prevState => ({
                                             ...prevState,
                                             sleeveText: newValue
+                                        }))
+                                    }}
+                                />
+                            </InputGroup>
+                            <InputGroup label="Pricing">
+                                <AutocompleteWrapper
+                                    label="Min"
+                                    options={[]}
+                                    inputValue={formInputState.priceMin}
+                                    onInputChange={(newValue: string) => {
+                                        setFormInputState(prevState => ({
+                                            ...prevState,
+                                            priceMin: newValue
+                                        }))
+                                    }}
+                                />
+                                <AutocompleteWrapper
+                                    label="max"
+                                    options={[]}
+                                    inputValue={formInputState.priceMax}
+                                    onInputChange={(newValue: string) => {
+                                        setFormInputState(prevState => ({
+                                            ...prevState,
+                                            priceMax: newValue
                                         }))
                                     }}
                                 />
