@@ -60,6 +60,28 @@ function InputForm() {
     const [buttonColor, setButtonColor] = useState<string>("White");
     const [sleeveText, setSleeveText] = useState<string>("");
 
+    const [formInputState, setFormInputState] = useState({
+        dispenserName: "",
+        collection: "",
+        subCollection: "",
+        copyright: "",
+        variation: "",
+        pezPackage: "Loose",
+        quality: "Great",
+        yearReleased: "",
+        pezURL: "",
+        stemColor: "",
+        imc: "",
+        patent: "",
+        country: "",
+        foot: "Feet",
+        footText: "",
+        sleeveColor: "White",
+        buttonColor: "White",
+        sleeveText: ""
+    });
+
+
     const [image, setImage] = useState<Blob | null>(null);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -169,41 +191,56 @@ function InputForm() {
                         <AutocompleteWrapper
                             label="Name"
                             options={[]}
-                            inputValue={dispenserName}
+                            inputValue={formInputState.dispenserName}
                             onInputChange={(newValue: string) => {
-                                setDispenserName(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    dispenserName: newValue
+                                }));
                             }}
                         />
                         <AutocompleteWrapper
                             label="Collection"
                             options={COLLECTIONS}
-                            inputValue={collection}
+                            inputValue={formInputState.collection}
                             onInputChange={(newValue: string) => {
-                                setCollection(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    collection: newValue
+                                }));
                             }}
                         />
                         <AutocompleteWrapper
                             label="Sub-Collection"
                             options={[]}
-                            inputValue={subCollection}
+                            inputValue={formInputState.subCollection}
                             onInputChange={(newValue: string) => {
-                                setSubCollection(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    subCollection: newValue
+                                }));
                             }}
                         />
                         <AutocompleteWrapper
                             label="Variation"
                             options={[]}
-                            inputValue={variation}
+                            inputValue={formInputState.variation}
                             onInputChange={(newValue: string) => {
-                                setVariation(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    variation: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
                             label="Copyright"
                             options={[]}
-                            inputValue={copyright}
+                            inputValue={formInputState.copyright}
                             onInputChange={(newValue: string) => {
-                                setCopyright(newValue);
+                                setFormInputState(prevState => ({
+                                    ...prevState,
+                                    copyright: newValue
+                                }))
                             }}
                         />
                         <AutocompleteWrapper
