@@ -15,7 +15,7 @@ import FootSelector from "@/components/InputForm/FootSelector";
 import VideoComponent from "@/components/InputForm/VideoComponent";
 import { from } from 'nearest-color';
 
-const COLORS = ["Green", "Blue"]
+
 const BUTTON_COLORS = ["Translucent", "Red"]
 const SLEEVE_COLORS = ["Translucent"]
 const COLLECTIONS = ["Licensed Characters", "PEZ"]
@@ -46,7 +46,7 @@ interface FormInputState {
     pezPackage: string;
     quality: string;
     yearReleased: string;
-    pezURL: string;
+    location: string;
     notes: string;
     stemColor: string;
     colorHex: string;
@@ -61,21 +61,29 @@ interface FormInputState {
 }
 
 const STEM_COLOR_GUESSES = {
-    Black: "#000000",
+    Black: "#020300",
+    Gray: "#6d6f65",
+    White: "#b7b9b7",
     Red: '#670e04',
+    Pink: '#8d173f',
+    "Light Pink": '#9a8173',
     Yellow: '#ada230',
     Tan: '#877e53',
     "Light Brown": '#775629',
     Brown: '#672702',
     "Blood Orange": '#991a00',
     Orange: '#911c00',
+    Purple: '#4e386d',
+    Lavender: '#5f5a79',
     "Navy Blue": '#080e15',
     Blue: '#0c1f55',
-    Teal: '#008080',
+    "light Blue": '#008080',
     Green: '#166936',
     "Lime Green": '#5fb940',
-    "Forest Green": '#131c0b',
+    "Forest Green": '#29501f',
 };
+
+const COLORS = Object.keys(STEM_COLOR_GUESSES)
 
 
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
@@ -91,7 +99,7 @@ const DEFAULT_FORM_STATE: FormInputState = {
     pezPackage: "Loose",
     quality: "Good",
     yearReleased: "",
-    pezURL: "",
+    location: "",
     notes: "",
     // Stem
     stemColor: "",
@@ -218,11 +226,11 @@ function InputForm() {
         <Box>
             <Stack direction="row" spacing={3}>
                 <Stack>
-                    <VideoComponent videoRef={videoRef}/>
-                    <canvas style={{width: '50vw'}} ref={canvasRef}></canvas>
                     <Button variant="contained" onClick={handleImageCapture}>
                         Take Picture
                     </Button>
+                    <VideoComponent videoRef={videoRef}/>
+                    <canvas style={{width: '50vw'}} ref={canvasRef}></canvas>
                 </Stack>
                 <form autoComplete="off" onSubmit={handleSubmit}>
                     <Stack direction="row">
@@ -315,17 +323,6 @@ function InputForm() {
                                     }))
                                 }}
                             />
-                            <AutocompleteWrapper
-                                label="Pez URL"
-                                options={[]}
-                                inputValue={formInputState.pezURL}
-                                onInputChange={(newValue: string) => {
-                                    setFormInputState(prevState => ({
-                                        ...prevState,
-                                        pezURL: newValue
-                                    }))
-                                }}
-                            />
                             <QualitySelector onPackageChange={(newValue: string) => {
                                 setFormInputState(prevState => ({
                                     ...prevState,
@@ -337,6 +334,17 @@ function InputForm() {
                                     quality: newValue
                                 }))
                             }} quality={formInputState.quality}/>
+                            <AutocompleteWrapper
+                                label="Location"
+                                options={[]}
+                                inputValue={formInputState.location}
+                                onInputChange={(newValue: string) => {
+                                    setFormInputState(prevState => ({
+                                        ...prevState,
+                                        location: newValue
+                                    }))
+                                }}
+                            />
                             <TextField
                                 size="small"
                                 sx={{width: 300}}
