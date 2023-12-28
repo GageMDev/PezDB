@@ -47,6 +47,7 @@ interface FormInputState {
     quality: string;
     yearReleased: string;
     pezURL: string;
+    notes: string;
     stemColor: string;
     imc: string;
     patent: string;
@@ -72,6 +73,7 @@ function InputForm() {
         quality: "Great",
         yearReleased: "",
         pezURL: "",
+        notes: "",
         // Stem
         stemColor: "",
         imc: "",
@@ -264,6 +266,15 @@ function InputForm() {
                                     quality: newValue
                                 }))
                             }} quality={formInputState.quality}/>
+                            <TextField
+                                size="small"
+                                sx={{width: 300}}
+                                margin="dense"
+                                label="notes"
+                                multiline
+                                value={formInputState.notes}
+                                onChange={(event: any) => setFormInputState({...formInputState, notes: event.target.value})}
+                            />
                         </InputGroup>
                         <Stack>
                             <InputGroup label="Stem">
