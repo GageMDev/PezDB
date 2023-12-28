@@ -18,10 +18,24 @@ import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper"
 import InputGroup from "@/components/InputForm/InputGroup";
 import QualitySelector from "@/components/InputForm/QualitySelector";
 import qualitySelector from "@/components/InputForm/QualitySelector";
+import FootSelector from "@/components/InputForm/FootSelector";
 
 const COLORS = ["Green", "Blue"]
+const BUTTON_COLORS = ["White", "Red"]
 const COLLECTIONS = ["Disney", "PEZ"]
 const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
+const IMC_TO_COUNTRY: {[key: string]: string[]} = {
+    "1": ["Austria", "China", "Hungary"],
+    "2": ["Austria", "Hungary"],
+    "3": ["Austria", "Hungary"],
+    "4": ["Austria"],
+    "5": ["Yugoslavia", "Slovenia"],
+    "6": ["Hong Kong", "China"],
+    "7": ["Hong Kong", "China", "Czech Republic", "Czechoslovakia"],
+    "8": ["Austria"],
+    "9": ["United States"],
+    "V": ["Yugoslavia", "Slovenia"],
+}
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
 
 function InputForm() {
@@ -30,7 +44,7 @@ function InputForm() {
     const [subCollection, setSubCollection] = useState("");
     const [copyright, setCopyright] = useState("");
     const [variation, setVariation] = useState("");
-    const [pezPackage, setPezPackage] = useState("");
+    const [pezPackage, setPezPackage] = useState("Loose");
     const [quality, setQuality] = useState("Great");
     const [yearReleased, setYearReleased] = useState("");
     const [pezURL, setPezURL] = useState("");
@@ -39,6 +53,12 @@ function InputForm() {
     const [imc, setIMC] = useState<string>("");
     const [patent, setPatent] = useState<string>("");
     const [country, setCountry] = useState<string>("");
+    const [foot, setFoot] = useState<string>("Feet");
+    const [footText, setFootText] = useState<string>("");
+
+    const [sleeveColor, setSleeveColor] = useState<string>("White");
+    const [buttonColor, setButtonColor] = useState<string>("White");
+    const [sleeveText, setSleeveText] = useState<string>("");
 
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -92,6 +112,12 @@ function InputForm() {
         formData.append("imc", imc);
         formData.append("patent", patent);
         formData.append("country", country);
+        formData.append("foot", foot);
+        formData.append("footText", footText);
+
+        formData.append("sleeveColor", sleeveColor);
+        formData.append("buttonColor", buttonColor);
+        formData.append("sleeveText", sleeveText);
 
         if (image) {
             formData.append("image", image);
@@ -225,10 +251,46 @@ function InputForm() {
                         />
                         <AutocompleteWrapper
                             label="Country"
-                            options={[]}
+                            options={IMC_TO_COUNTRY[imc] || []}
                             inputValue={country}
                             onInputChange={(newValue: string) => {
                                 setCountry(newValue);
+                            }}
+                        />
+                        <FootSelector foot={foot} onFootChange={setFoot}/>
+                        <AutocompleteWrapper
+                            label="Foot Text"
+                            options={[]}
+                            inputValue={footText}
+                            onInputChange={(newValue: string) => {
+                                setFootText(newValue);
+                            }}
+                            helpText="Use a space between to chars to indicate one on each foot. Use ? to indicate a missing one if needed."
+                        />
+                    </InputGroup>
+                    <InputGroup label="Sleeve">
+                        <AutocompleteWrapper
+                            label="Color"
+                            options={["White"]}
+                            inputValue={sleeveColor}
+                            onInputChange={(newValue: string) => {
+                                setSleeveColor(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Button Color"
+                            options={BUTTON_COLORS}
+                            inputValue={buttonColor}
+                            onInputChange={(newValue: string) => {
+                                setButtonColor(newValue);
+                            }}
+                        />
+                        <AutocompleteWrapper
+                            label="Text"
+                            options={[]}
+                            inputValue={sleeveText}
+                            onInputChange={(newValue: string) => {
+                                setSleeveColor(newValue);
                             }}
                         />
                     </InputGroup>

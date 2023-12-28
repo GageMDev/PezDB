@@ -35,7 +35,7 @@ const QualitySelector = ({pezPackage, quality, onPackageChange, onQualityChange}
                 <FormControlLabel value="Loose" control={<Radio/>} label="Loose"/>
             </RadioGroup>
             <FormControl sx={{width: 300}}>
-                <Select labelId="quality-label" value={quality} onChange={handleQualityChange}>
+                <Select size="small" labelId="quality-label" value={quality} onChange={handleQualityChange}>
                     <MenuItem value={"Great"}>Great</MenuItem>
                     <MenuItem value={"Good"}>Good</MenuItem>
                     <MenuItem value={"Okay"}>Okay</MenuItem>
