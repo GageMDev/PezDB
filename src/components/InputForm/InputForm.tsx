@@ -18,7 +18,9 @@ import { from } from 'nearest-color';
 const COLORS = ["Green", "Blue"]
 const BUTTON_COLORS = ["Translucent", "Red"]
 const SLEEVE_COLORS = ["Translucent"]
-const COLLECTIONS = ["Disney", "PEZ"]
+const COLLECTIONS = ["Licensed Characters", "PEZ"]
+const SUB_COLLECTIONS = ["Disney", "Dreamworks"]
+const SUB_SUB_COLLECTIONS = ["Disney", "Dreamworks"]
 const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
 const IMC_TO_COUNTRY: { [key: string]: string[] } = {
     "1": ["Austria", "China", "Hungary"],
@@ -37,6 +39,7 @@ interface FormInputState {
     name: string;
     collection: string;
     subCollection: string;
+    subSubCollection: string;
     release: string;
     copyright: string;
     variation: string;
@@ -81,6 +84,7 @@ const DEFAULT_FORM_STATE: FormInputState = {
     name: "",
     collection: "",
     subCollection: "",
+    subSubCollection: "",
     release: "",
     copyright: "",
     variation: "",
@@ -220,7 +224,7 @@ function InputForm() {
                         Take Picture
                     </Button>
                 </Stack>
-                <form onSubmit={handleSubmit}>
+                <form autoComplete="off" onSubmit={handleSubmit}>
                     <Stack direction="row">
                         <InputGroup label="Overall">
                             <AutocompleteWrapper
@@ -247,12 +251,23 @@ function InputForm() {
                             />
                             <AutocompleteWrapper
                                 label="Sub-Collection"
-                                options={[]}
+                                options={SUB_COLLECTIONS}
                                 inputValue={formInputState.subCollection}
                                 onInputChange={(newValue: string) => {
                                     setFormInputState(prevState => ({
                                         ...prevState,
                                         subCollection: newValue
+                                    }));
+                                }}
+                            />
+                            <AutocompleteWrapper
+                                label="Sub-Sub-Collection"
+                                options={SUB_SUB_COLLECTIONS}
+                                inputValue={formInputState.subSubCollection}
+                                onInputChange={(newValue: string) => {
+                                    setFormInputState(prevState => ({
+                                        ...prevState,
+                                        subSubCollection: newValue
                                     }));
                                 }}
                             />
