@@ -7,7 +7,6 @@ import {Box} from "@mui/material";
 const fetcher = (url: string | URL | Request) => fetch(url).then(res => res.json())
 
 const columns: GridColDef[] = [
-    {field: 'name', headerName: 'Name', flex: 1 },
     {
         field: 'image', headerName: 'Image', minWidth: 250, flex: 1, renderCell: (params: GridRenderCellParams<any, Date>) => {
             return params.value ? (
@@ -17,7 +16,12 @@ const columns: GridColDef[] = [
             );
         },
     },
+    {field: 'name', headerName: 'Name', flex: 1 },
+    {field: 'collection', headerName: 'Collection', flex: 1 },
+    {field: 'subCollection', headerName: 'Sub Collection', flex: 1 },
+    {field: 'patent', headerName: 'Patent', flex: 1 },
     {field: 'stemColor', headerName: 'Stem Color', flex: 1},
+    {field: 'foot', headerName: 'Footed', flex: 1},
 ];
 
 function DispenserTable() {
