@@ -55,6 +55,7 @@ export async function POST(req: Request) {
     // Prepare the document to be inserted
     const document: { [key: string]: any; image: string } = {
         image: imagePath,
+        timeAdded: new Date()
     };
 
 

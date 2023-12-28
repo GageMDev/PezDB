@@ -21,7 +21,8 @@ import qualitySelector from "@/components/InputForm/QualitySelector";
 import FootSelector from "@/components/InputForm/FootSelector";
 
 const COLORS = ["Green", "Blue"]
-const BUTTON_COLORS = ["White", "Red"]
+const BUTTON_COLORS = ["Translucent", "Red"]
+const SLEEVE_COLORS = ["Translucent"]
 const COLLECTIONS = ["Disney", "PEZ"]
 const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
 const IMC_TO_COUNTRY: { [key: string]: string[] } = {
@@ -62,30 +63,32 @@ interface FormInputState {
 
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
 
+const DEFAULT_FORM_STATE = {
+    name: "",
+    collection: "",
+    subCollection: "",
+    copyright: "",
+    variation: "",
+    pezPackage: "Loose",
+    quality: "Good",
+    yearReleased: "",
+    pezURL: "",
+    notes: "",
+    // Stem
+    stemColor: "",
+    imc: "",
+    patent: "",
+    country: "",
+    foot: "Feet",
+    footText: "",
+    // Sleeve
+    sleeveColor: "Translucent",
+    buttonColor: "Translucent",
+    sleeveText: ""
+}
+
 function InputForm() {
-    const [formInputState, setFormInputState] = useState<FormInputState>({
-        name: "",
-        collection: "",
-        subCollection: "",
-        copyright: "",
-        variation: "",
-        pezPackage: "Loose",
-        quality: "Great",
-        yearReleased: "",
-        pezURL: "",
-        notes: "",
-        // Stem
-        stemColor: "",
-        imc: "",
-        patent: "",
-        country: "",
-        foot: "Feet",
-        footText: "",
-        // Sleeve
-        sleeveColor: "White",
-        buttonColor: "White",
-        sleeveText: ""
-    });
+    const [formInputState, setFormInputState] = useState<FormInputState>(DEFAULT_FORM_STATE);
 
     const [image, setImage] = useState<Blob | null>(null);
 
@@ -164,13 +167,18 @@ function InputForm() {
         }
     }
 
+    const handleNext = () => {
+        setSubmitMessage("")
+        setFormInputState(DEFAULT_FORM_STATE)
+    }
+
 
     return (
         <Box>
             <Stack direction="row" spacing={3}>
                 <Stack>
-                    <video ref={videoRef} autoPlay/>
-                    <canvas ref={canvasRef}></canvas>
+                    <video ref={videoRef} autoPlay style={{width: '50vw'}}/>
+                    <canvas style={{width: '50vw'}} ref={canvasRef}></canvas>
                     <Button variant="contained" onClick={handleImageCapture}>
                         Take Picture
                     </Button>
@@ -344,7 +352,7 @@ function InputForm() {
                             <InputGroup label="Sleeve">
                                 <AutocompleteWrapper
                                     label="Color"
-                                    options={["White"]}
+                                    options={SLEEVE_COLORS}
                                     inputValue={formInputState.sleeveColor}
                                     onInputChange={(newValue: string) => {
                                         setFormInputState(prevState => ({
@@ -388,9 +396,14 @@ function InputForm() {
                         Submit
                     </Button>
                     {submitMessage && (
-                        <Stack direction="row">
+                        <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="body1">{submitMessage}</Typography>
-                            <Button onClick={handleUndo}>Undo?</Button>
+                            <Button variant="contained" color="primary" onClick={handleNext}>
+                                Next
+                            </Button>
+                            <Button variant="contained" color="secondary" onClick={handleUndo}>
+                                Undo
+                            </Button>
                         </Stack>
                     )}
                 </form>
