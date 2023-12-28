@@ -2,14 +2,8 @@
 import React, {useState, useRef, useEffect} from "react";
 import axios from "axios";
 import {
-    Autocomplete,
     Box,
     Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
     Stack,
     TextField,
     Typography,
@@ -17,8 +11,9 @@ import {
 import AutocompleteWrapper from "@/components/InputWrappers/AutocompleteWrapper";
 import InputGroup from "@/components/InputForm/InputGroup";
 import QualitySelector from "@/components/InputForm/QualitySelector";
-import qualitySelector from "@/components/InputForm/QualitySelector";
 import FootSelector from "@/components/InputForm/FootSelector";
+import VideoComponent from "@/components/InputForm/VideoComponent";
+import { from } from 'nearest-color';
 
 const COLORS = ["Green", "Blue"]
 const BUTTON_COLORS = ["Translucent", "Red"]
@@ -51,6 +46,7 @@ interface FormInputState {
     pezURL: string;
     notes: string;
     stemColor: string;
+    colorHex: string;
     imc: string;
     patent: string;
     country: string;
@@ -60,6 +56,23 @@ interface FormInputState {
     buttonColor: string;
     sleeveText: string;
 }
+
+const STEM_COLOR_GUESSES = {
+    Black: "#000000",
+    Red: '#670e04',
+    Yellow: '#ada230',
+    Tan: '#877e53',
+    "Light Brown": '#775629',
+    Brown: '#672702',
+    "Blood Orange": '#991a00',
+    Orange: '#911c00',
+    "Navy Blue": '#080e15',
+    Blue: '#0c1f55',
+    Teal: '#008080',
+    Green: '#166936',
+    "Lime Green": '#5fb940',
+    "Forest Green": '#131c0b',
+};
 
 
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
@@ -78,6 +91,7 @@ const DEFAULT_FORM_STATE: FormInputState = {
     notes: "",
     // Stem
     stemColor: "",
+    colorHex: "",
     imc: "",
     patent: "",
     country: "",
@@ -116,13 +130,34 @@ function InputForm() {
 
     const handleImageCapture = async () => {
         if (videoRef.current && canvasRef.current) {
-            canvasRef.current.width = videoRef.current.videoWidth;
-            canvasRef.current.height = videoRef.current.videoHeight;
-            canvasRef.current.getContext("2d")?.drawImage(videoRef.current, 0, 0);
+            const canvas = canvasRef.current;
+            const video = videoRef.current;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext("2d");
+            context?.drawImage(video, 0, 0);
             const blob = await new Promise<Blob | null>(
-                (resolve) => canvasRef.current?.toBlob(resolve),
+                (resolve) => canvas.toBlob(resolve),
             );
             setImage(blob);
+
+            // Get the color of the center pixel
+            const centerX = Math.floor(canvas.width / 2);
+            const centerY = Math.floor(canvas.height / 2);
+            const imageData = context?.getImageData(centerX, centerY, 1, 1).data;
+            if (imageData) {
+                const [r, g, b] = imageData;
+                const centerPixelColor = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+                console.log(`Center pixel color: #${centerPixelColor}`);
+                const nearestColor = from(STEM_COLOR_GUESSES);
+                setFormInputState({
+                    ...formInputState,
+                    stemColor: nearestColor(`#${centerPixelColor}`)?.name || "",
+                    colorHex: `#${centerPixelColor}`
+                })
+            } else {
+                console.log('Unable to retrieve center pixel color.');
+            }
         }
     };
 
@@ -179,7 +214,7 @@ function InputForm() {
         <Box>
             <Stack direction="row" spacing={3}>
                 <Stack>
-                    <video ref={videoRef} autoPlay style={{width: '50vw'}}/>
+                    <VideoComponent videoRef={videoRef}/>
                     <canvas style={{width: '50vw'}} ref={canvasRef}></canvas>
                     <Button variant="contained" onClick={handleImageCapture}>
                         Take Picture

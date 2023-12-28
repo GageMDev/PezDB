@@ -16,6 +16,7 @@
     "@mui/x-data-grid": "^6.18.6",
     "axios": "^1.6.2",
     "mongodb": "^6.3.0",
+    "nearest-color": "^0.4.4",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
@@ -23,6 +24,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/nearest-color": "^0.4.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
