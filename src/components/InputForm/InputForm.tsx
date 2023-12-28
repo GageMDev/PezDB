@@ -42,6 +42,7 @@ interface FormInputState {
     name: string;
     collection: string;
     subCollection: string;
+    release: string;
     copyright: string;
     variation: string;
     pezPackage: string;
@@ -63,10 +64,11 @@ interface FormInputState {
 
 const PATENTS = ["BOX", "DBP", "2.620.061", "3.410.455", "3.845.882", "3.942.683", "4.966.305", "5.984.285", "7.523.841"]
 
-const DEFAULT_FORM_STATE = {
+const DEFAULT_FORM_STATE: FormInputState = {
     name: "",
     collection: "",
     subCollection: "",
+    release: "",
     copyright: "",
     variation: "",
     pezPackage: "Loose",
@@ -216,6 +218,17 @@ function InputForm() {
                                     setFormInputState(prevState => ({
                                         ...prevState,
                                         subCollection: newValue
+                                    }));
+                                }}
+                            />
+                            <AutocompleteWrapper
+                                label="Release"
+                                options={[]}
+                                inputValue={formInputState.release}
+                                onInputChange={(newValue: string) => {
+                                    setFormInputState(prevState => ({
+                                        ...prevState,
+                                        release: newValue
                                     }));
                                 }}
                             />
