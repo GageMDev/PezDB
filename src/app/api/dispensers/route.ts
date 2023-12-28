@@ -31,11 +31,9 @@ export async function GET(request: Request) {
 
 export async function POST(req: Request) {
     const formData = await req.formData()
-    const name = formData.get("name")
-    const stemColor = formData.get("stemColor")
+    let imagePath = '';
 
     const image = formData.get('image')
-    let imagePath = '';
 
     // Ensure image is an instance of Blob
     if (image instanceof Blob) {
@@ -54,17 +52,31 @@ export async function POST(req: Request) {
     // Get the documents collection
     const collection = db.collection('dispensers');
 
-    // Insert some documents
-    const result = await collection.insertOne({
+    // Prepare the document to be inserted
+    const document: { [key: string]: any; image: string } = {
         image: imagePath,
-        name: name,
-        stemColor: stemColor
-    });
+    };
+
+
+    // Add all form data to the document
+    for (let entry of formData.entries()) {
+        const key = entry[0];
+        const value = entry[1];
+
+        // Skip the image field as it's already handled
+        if (key !== 'image') {
+            document[key] = value;
+        }
+    }
+
+    // Insert the document
+    const result = await collection.insertOne(document);
 
     await client.close();
 
     return Response.json({id: result.insertedId});
 }
+
 
 export async function DELETE(req: Request) {
     // Parse the JSON body of the request
