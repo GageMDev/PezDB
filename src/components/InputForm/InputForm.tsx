@@ -118,8 +118,8 @@ const DEFAULT_FORM_STATE: FormInputState = {
     buttonColor: "Translucent",
     sleeveText: "",
     // Pricing
-    priceMin: "",
-    priceMax: ""
+    priceMin: "1",
+    priceMax: "2"
 }
 
 function InputForm() {
@@ -226,6 +226,25 @@ function InputForm() {
     const handleNext = () => {
         setSubmitMessage("")
         setFormInputState(DEFAULT_FORM_STATE)
+    }
+
+    const handleSoftNext = () => {
+        setSubmitMessage("")
+        setFormInputState({
+            ...formInputState,
+            release: "",
+            variation: "",
+            yearReleased: "",
+            quality: "Good",
+            notes: "",
+            imc: "",
+            patent: "",
+            country: "",
+            footText: "",
+            sleeveText: "",
+            priceMin: "1",
+            priceMax: "2"
+        })
     }
 
 
@@ -500,6 +519,9 @@ function InputForm() {
                     {submitMessage && (
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="body1">{submitMessage}</Typography>
+                            <Button variant="contained" color="primary" onClick={handleSoftNext}>
+                                Soft Next
+                            </Button>
                             <Button variant="contained" color="primary" onClick={handleNext}>
                                 Next
                             </Button>
