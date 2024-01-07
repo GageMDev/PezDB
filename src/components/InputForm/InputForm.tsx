@@ -18,7 +18,7 @@ import { from } from 'nearest-color';
 
 const BUTTON_COLORS = ["Translucent", "Red"]
 const SLEEVE_COLORS = ["Translucent"]
-const SUB_SUB_COLLECTIONS = ["Disney", "Dreamworks"]
+const SUB_SUB_COLLECTIONS = ["Disney", "Dreamworks", "Helmets"]
 const IMCS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "V"]
 const IMC_TO_COUNTRY: { [key: string]: string[] } = {
     "1": ["Austria", "China", "Hungary"],
@@ -35,6 +35,7 @@ const IMC_TO_COUNTRY: { [key: string]: string[] } = {
 
 const COLLECTION_SUBCOLLECTIONS: {[key: string]: string[]} = {
     "Holiday": ["Christmas"],
+    "Sports": ["Baseball", "Football", "NASCAR"],
 }
 
 interface FormInputState {
@@ -182,6 +183,12 @@ function InputForm() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (image === null) {
+            setSubmitMessage("Don't forget image")
+            return;
+        }
+
 
         const formData = new FormData();
         Object.keys(formInputState).forEach((key) => {
